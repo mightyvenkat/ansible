@@ -1,0 +1,80 @@
+using AD-HOC COMMAND
+===========================
+
+first create a 2 instance in aws
+apt update
+apt install ansible -y
+ansible --version
+two imortant file
+inventory file and ansible.cfg file
+mkdir aws_ansible
+create ansible.cfg and client.pem file 
+vi ansible.cfg and paste the below script
+[defaults]
+inventory = hosts
+remote_user = ubuntu
+private_key_file = /root/aws_ansible/client.pem
+host_key_checking = False
+create vi hosts file
+put the ip
+run the command ansible 
+chmod 600 client.pem
+ansible all -m ping
+ansible test -m ping
+ansible-doc -l | more
+ansible-doc <module_name>
+ansible test -a "uname -a"
+ansible test -a "df -h"
+ansible test -a "free -m"
+create a playbook
+java.yaml
+-------------------------------------------
+---
+- name: Install Java 11 and Jenkins
+  hosts: test
+  become: yes
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  tasks:
+    - name: Update the apt cache (Debian-based systems)
+      apt:
+        update_cache: yes
+      when: ansible_os_family == "Debian"
+
+    - name: Install Java 11 (Debian-based systems)
+      apt:
+        name: openjdk-11-jdk
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: Add Jenkins repository key (Debian-based systems)
+      apt_key:
+        url: https://pkg.jenkins.io/debian/jenkins.io.key
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: Add Jenkins repository (Debian-based systems)
+      apt_repository:
+        repo: deb http://pkg.jenkins.io/debian-stable binary/
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: Install Jenkins (Debian-based systems)
+      apt:
+        name: jenkins
+        state: present
+      when: ansible_os_family == "Debian" 
+
+===================================================
+        
+ ansible-playbook -i hosts java.yaml
+
+      
+      
+      
+      
+      
+      
+      
+      
+
